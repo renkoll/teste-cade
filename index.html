@@ -3,330 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard CAdE</title>
+  <title>Layout CAdE Navegação</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-    body, html { width: 100%; height: 100%; background-color: #f1f5f9; overflow: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body, html { width: 100%; height: 100%; background: #f8fafc; overflow: hidden; }
 
-    /* LAYOUT PRINCIPAL (FIEL À IMAGEM 2) */
-    .dashboard-container {
+    /* GRADE PRINCIPAL BASEADA NA SUA IMAGEM */
+    .grid-container {
       display: grid;
-      grid-template-columns: 65px 240px 1fr 340px;
+      grid-template-columns: 60px 220px 1fr 300px;
+      grid-template-rows: 1fr 120px;
       height: 100vh;
       width: 100vw;
-      background-color: #cbd5e1;
       gap: 1px;
+      background-color: #cbd5e1;
     }
 
-    /* COLUNAS E PAINEIS BASE */
-    .coluna { background-color: #ffffff; display: flex; flex-direction: column; }
-    
-    /* 1. BARRA DE ÍCONES (ESQUERDA) */
+    .bloco { background: #ffffff; padding: 12px; display: flex; flex-direction: column; }
+
+    /* 1. BARRA LATERAL (ICONES) - Ocupa as 2 linhas */
     .barra-icones {
-      background-color: #f8fafc;
+      grid-row: 1 / 3;
+      background: #f1f5f9;
       align-items: center;
-      padding: 20px 0;
-      gap: 18px;
+      gap: 16px;
+      padding-top: 16px;
     }
 
     .btn-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 18px;
-      transition: all 0.25s ease;
+      width: 40px; height: 40px; border-radius: 50%; background: #fff;
+      border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; text-decoration: none; color: #334155; transition: 0.2s;
     }
+    .btn-icon:hover { background: #0284c7; color: white; border-color: #0284c7; }
 
-    .btn-icon:hover {
-      background-color: #e0f2fe;
-      border-color: #38bdf8;
-      transform: translateY(-2px);
-    }
-
-    .btn-icon.ativo {
-      background-color: #0284c7;
-      color: white;
-      border-color: #0284c7;
-      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
-    }
-
-    /* 2. LISTA DE CARDS */
-    .lista-cards { padding: 12px; gap: 10px; }
-
-    .card-item {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 14px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .card-item:hover {
-      border-color: #0284c7;
-      background-color: #f0f9ff;
-      transform: translateX(3px);
-    }
-
-    .card-item h4 { margin-bottom: 4px; color: #0f172a; font-size: 14px; }
-    .card-item p { color: #64748b; font-size: 12px; }
-
-    /* 3. PAINEL CENTRAL + INFERIOR */
-    .area-central {
+    /* 2. COLUNA ESQUERDA (CARDS SUPERIOR E INFERIOR AZUL) */
+    .coluna-esquerda {
       display: grid;
-      grid-template-rows: 1fr 110px;
-      gap: 1px;
-      background-color: #cbd5e1;
-      position: relative;
-    }
-
-    .painel-principal {
-      background-color: #ffffff;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      position: relative;
-    }
-
-    /* ANIMAÇÃO FLUIDA DE TRANSIÇÃO DO PAINEL */
-    .conteudo-animado {
-      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      opacity: 1;
-      transform: translateY(0);
-      width: 100%;
-    }
-
-    .conteudo-animado.trocando {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-
-    .bloco-avisos {
-      background-color: #ffffff;
-      padding: 16px;
-    }
-
-    /* 4. DIREITA (CALENDÁRIO + EVENTOS) */
-    .area-direita {
-      display: grid;
-      grid-template-rows: 320px 1fr;
+      grid-template-rows: 1fr 1fr;
       gap: 1px;
       background-color: #cbd5e1;
     }
 
-    .card-eventos {
+    .card-menu {
+      background: #ffffff; padding: 14px; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; justify-content: center; transition: 0.2s;
+    }
+    .card-menu:hover { background: #f0f9ff; }
+
+    /* CARD EM DESTAQUE (BORDA AZUL DA IMAGEM) */
+    .card-azul {
+      border: 2px solid #0284c7 !important;
+      background: #f0f9ff;
+    }
+
+    /* 3. PAINEL CENTRAL (CINZA) */
+    .painel-central {
+      background-color: #e2e8f0;
+      justify-content: center; align-items: center; text-align: center;
+      padding: 20px;
+    }
+
+    /* 4. BLOCO INFERIOR CENTRAL */
+    .bloco-inferior {
+      grid-column: 2 / 4; /* Estende da coluna 2 até a central */
       background-color: #ffffff;
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
     }
 
-    .card-eventos:hover {
-      background-color: #fffdf5;
-    }
-
-    /* MODAL OVERLAY (TELA CHEIA TOTAL) */
-    .overlay-expandido {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .overlay-expandido.visivel {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-corpo {
-      background: #ffffff;
-      width: 90%;
-      max-width: 700px;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
-      transform: scale(0.92);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .overlay-expandido.visivel .modal-corpo {
-      transform: scale(1);
+    /* 5. COLUNA DIREITA (CALENDÁRIO + EVENTOS) - Ocupa as 2 linhas */
+    .coluna-direita {
+      grid-row: 1 / 3;
+      display: grid;
+      grid-template-rows: 280px 1fr;
+      gap: 1px;
+      background-color: #cbd5e1;
     }
   </style>
 </head>
 <body>
 
-  <div class="dashboard-container">
-    
+  <div class="grid-container">
+
     <!-- 1. BARRA LATERAL (ÍCONES) -->
-    <div class="coluna barra-icones">
-      <div class="btn-icon ativo" onclick="trocarAba('home', this)" title="Início">🏠</div>
-      <div class="btn-icon" onclick="trocarAba('aulas', this)" title="Aulas">📚</div>
-      <div class="btn-icon" onclick="trocarAba('avisos', this)" title="Avisos">📢</div>
-      <div class="btn-icon" onclick="trocarAba('config', this)" title="Configurações">⚙️</div>
+    <div class="bloco barra-icones">
+      <a href="https://SEU-MOODLE.com/course/view.php?id=SEU_ID" target="_parent" class="btn-icon" title="Início da Disciplina">🏠</a>
+      <a href="#modulo1" target="_parent" class="btn-icon" title="Módulos">📚</a>
+      <a href="#avisos" target="_parent" class="btn-icon" title="Avisos">📢</a>
     </div>
 
-    <!-- 2. CARDS DA ESQUERDA -->
-    <div class="coluna lista-cards" id="coluna-cards">
-      <div class="card-item" onclick="exibirConteudo('Módulo 1', 'Acesse o material de introdução e as primeiras atividades.')">
-        <h4>📘 Módulo 1</h4>
-        <p>Clique para expandir</p>
-      </div>
-      <div class="card-item" onclick="exibirConteudo('Tarefas', 'Confira as entregas e prazos do semestre.')">
-        <h4>✏️ Tarefas</h4>
-        <p>Clique para ver os prazos</p>
-      </div>
-      <div class="card-item" style="flex-grow: 1;" onclick="exibirConteudo('Projeto Final', 'Instruções gerais sobre o trabalho em grupo.')">
-        <h4>🚀 Projeto Final</h4>
-        <p>Detalhes e equipe</p>
-      </div>
+    <!-- 2. COLUNA ESQUERDA (2 BLOCOS) -->
+    <div class="coluna-esquerda">
+      <!-- Card Superior -->
+      <a href="URL_DA_PAGINA_MODULO_1_NO_MOODLE" target="_parent" class="card-menu">
+        <h4 style="font-size: 14px; color: #0f172a;">📘 Módulo 1</h4>
+        <p style="font-size: 12px; color: #64748b;">Ir para o conteúdo</p>
+      </a>
+
+      <!-- Card Inferior (Bloco em azul da imagem) -->
+      <a href="URL_DA_PAGINA_TAREFAS_NO_MOODLE" target="_parent" class="card-menu card-azul">
+        <h4 style="font-size: 14px; color: #0284c7;">✏️ Tarefas & Prazos</h4>
+        <p style="font-size: 12px; color: #64748b;">Ver atividades abertas</p>
+      </a>
     </div>
 
-    <!-- 3. PAINEL CENTRAL + INFERIOR -->
-    <div class="area-central">
-      <div class="painel-principal">
-        <div id="conteudo-painel" class="conteudo-animado">
-          <h2 style="color: #0f172a; margin-bottom: 8px;">Painel Interativo</h2>
-          <p style="color: #64748b; font-size: 14px;">Clique em qualquer bloco ou item lateral para visualizar o conteúdo detalhado aqui com animação fluida.</p>
-        </div>
-      </div>
-
-      <div class="bloco-avisos">
-        <h4 style="color: #334155; font-size: 13px; margin-bottom: 4px;">📢 Avisos da Coordenação</h4>
-        <p style="color: #64748b; font-size: 12px;">Fiquem atentos às datas dos encontros síncronos da semana!</p>
-      </div>
+    <!-- 3. PAINEL CENTRAL (ÁREA CINZA) -->
+    <div class="bloco painel-central">
+      <h3 style="color: #475569; font-size: 18px; margin-bottom: 6px;">Área Central do Layout</h3>
+      <p style="color: #64748b; font-size: 13px;">Os cliques nos cards abrem a página correspondente direto no Moodle.</p>
     </div>
 
-    <!-- 4. DIREITA (CALENDÁRIO + EVENTOS) -->
-    <div class="area-direita">
-      <div class="coluna" style="padding: 10px;">
+    <!-- 4. BLOCO INFERIOR (AVISOS) -->
+    <div class="bloco bloco-inferior">
+      <h4 style="font-size: 13px; color: #334155; margin-bottom: 4px;">📢 Quadro de Avisos Gerais</h4>
+      <p style="font-size: 12px; color: #64748b;">Avisos estáticos fixados pela coordenação.</p>
+    </div>
+
+    <!-- 5. DIREITA (CALENDÁRIO + EVENTOS) -->
+    <div class="coluna-direita">
+      <div class="bloco" style="padding: 4px;">
         <iframe src="https://calendar.google.com/calendar/embed?src=renevieiragenrokol%40gmail.com&ctz=America%2FSao_Paulo" 
-                style="border:0; width:100%; height:100%; border-radius:6px;" frameborder="0" scrolling="no">
+                style="border:0; width:100%; height:100%; border-radius:4px;" frameborder="0" scrolling="no">
         </iframe>
       </div>
-
-      <div class="card-eventos" onclick="abrirModal()">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-          <h4 style="color: #d97706; font-size: 13px;">🔔 Próximos Eventos</h4>
-          <span style="font-size: 10px; background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 4px; font-weight: bold;">Ver Tudo 🔍</span>
-        </div>
-        <ul style="padding-left: 16px; font-size: 12px; color: #475569; line-height: 1.6;">
-          <li><strong>28/07:</strong> Entrega do Módulo 1</li>
-          <li><strong>05/08:</strong> Aula Síncrona via RNP</li>
+      <div class="bloco">
+        <h4 style="font-size: 13px; color: #d97706; margin-bottom: 6px;">🔔 Próximas Entregas</h4>
+        <ul style="padding-left: 14px; font-size: 12px; color: #475569;">
+          <li>28/07 - Módulo 1</li>
+          <li>05/08 - Aula RNP</li>
         </ul>
       </div>
     </div>
 
   </div>
 
-  <!-- OVERLAY / MODAL DE TELA CHEIA PARA EVENTOS -->
-  <div id="overlay" class="overlay-expandido">
-    <div class="modal-corpo">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
-        <h3 style="color: #b45309; margin: 0;">📅 Cronograma & Eventos Expandido</h3>
-        <button onclick="fecharModal()" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">Fechar ✖</button>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 10px; text-align: left;">
-        <div style="background: #fffdf5; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 4px;">
-          <strong>28/07 — Entrega do Módulo 1</strong>
-          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Envio do relatório em formato PDF até às 23:55 no Moodle.</p>
-        </div>
-        <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 12px; border-radius: 4px;">
-          <strong>05/08 — Aula Síncrona via RNP</strong>
-          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Encontro ao vivo interativo das 14:00 às 16:00.</p>
-        </div>
-        <div style="background: #f8fafc; border-left: 4px solid #64748b; padding: 12px; border-radius: 4px;">
-          <strong>18/08 — Apresentação do Projeto Integrador</strong>
-          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Apresentação ao vivo para a banca examinadora.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // TROCA DE CONTEÚDO COM ANIMAÇÃO SUAVE SLIDE-FADE
-    function exibirConteudo(titulo, texto) {
-      const el = document.getElementById('conteudo-painel');
-      el.classList.add('trocando');
-      
-      setTimeout(() => {
-        el.innerHTML = `
-          <h2 style="color: #0f172a; margin-bottom: 8px;">${titulo}</h2>
-          <p style="color: #334155; font-size: 14px; line-height: 1.6;">${texto}</p>
-        `;
-        el.classList.remove('trocando');
-      }, 200);
-    }
-
-    // MODAL EM TELA CHEIA
-    function abrirModal() {
-      document.getElementById('overlay').classList.add('visivel');
-    }
-
-    function fecharModal() {
-      document.getElementById('overlay').classList.remove('visivel');
-    }
-
-    // TROCA DE ABAS LATERAIS
-    function trocarAba(aba, elemento) {
-      document.querySelectorAll('.btn-icon').forEach(btn => btn.classList.remove('ativo'));
-      elemento.classList.add('ativo');
-
-      const col = document.getElementById('coluna-cards');
-      
-      if(aba === 'home') {
-        col.innerHTML = `
-          <div class="card-item" onclick="exibirConteudo('Módulo 1', 'Acesse o material de introdução e as primeiras atividades.')">
-            <h4>📘 Módulo 1</h4><p>Clique para expandir</p>
-          </div>
-          <div class="card-item" onclick="exibirConteudo('Tarefas', 'Confira as entregas e prazos do semestre.')">
-            <h4>✏️ Tarefas</h4><p>Clique para ver os prazos</p>
-          </div>
-          <div class="card-item" style="flex-grow: 1;" onclick="exibirConteudo('Projeto Final', 'Instruções gerais sobre o trabalho em grupo.')">
-            <h4>🚀 Projeto Final</h4><p>Detalhes e equipe</p>
-          </div>
-        `;
-      } else if(aba === 'aulas') {
-        col.innerHTML = `
-          <div class="card-item" onclick="exibirConteudo('Aula 01 - Introdução', 'Assista ao vídeo gravado do primeiro encontro.')">
-            <h4>🎥 Aula 01</h4><p>Vídeo aula</p>
-          </div>
-          <div class="card-item" onclick="exibirConteudo('Aula 02 - Prática', 'Acesse os slides e códigos de exemplo.')">
-            <h4>📂 Aula 02</h4><p>Slides & Materiais</p>
-          </div>
-        `;
-      } else if(aba === 'avisos') {
-        col.innerHTML = `
-          <div class="card-item" onclick="exibirConteudo('Mural de Avisos', 'Lembrete: Mantenha suas tarefas em dia.')">
-            <h4>📢 Mural</h4><p>Recados da semana</p>
-          </div>
-        `;
-      } else if(aba === 'config') {
-        col.innerHTML = `
-          <div class="card-item" onclick="exibirConteudo('Plano de Ensino', 'Carga horária: 60h. Ementa disponível em PDF.')">
-            <h4>ℹ️ Sobre</h4><p>Plano do curso</p>
-          </div>
-        `;
-      }
-    }
-  </script>
 </body>
 </html>
