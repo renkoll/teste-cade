@@ -2,97 +2,331 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard CAdE</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { background: #f8fafc; padding: 10px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body, html { width: 100%; height: 100%; background-color: #f1f5f9; overflow: hidden; }
 
-    /* LAYOUT PRINCIPAL */
-    .grid-container {
+    /* LAYOUT PRINCIPAL (FIEL À IMAGEM 2) */
+    .dashboard-container {
       display: grid;
-      grid-template-columns: 60px 240px 1fr 320px;
+      grid-template-columns: 65px 240px 1fr 340px;
+      height: 100vh;
+      width: 100vw;
+      background-color: #cbd5e1;
       gap: 1px;
-      background: #cbd5e1;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      overflow: hidden;
-      min-height: 520px;
     }
 
-    .col { background: #fff; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+    /* COLUNAS E PAINEIS BASE */
+    .coluna { background-color: #ffffff; display: flex; flex-direction: column; }
     
-    /* ANIMAÇÃO FLUIDA */
-    .painel-conteudo {
-      transition: opacity 0.4s ease, transform 0.4s ease;
+    /* 1. BARRA DE ÍCONES (ESQUERDA) */
+    .barra-icones {
+      background-color: #f8fafc;
+      align-items: center;
+      padding: 20px 0;
+      gap: 18px;
+    }
+
+    .btn-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-icon:hover {
+      background-color: #e0f2fe;
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+    }
+
+    .btn-icon.ativo {
+      background-color: #0284c7;
+      color: white;
+      border-color: #0284c7;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+    }
+
+    /* 2. LISTA DE CARDS */
+    .lista-cards { padding: 12px; gap: 10px; }
+
+    .card-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .card-item:hover {
+      border-color: #0284c7;
+      background-color: #f0f9ff;
+      transform: translateX(3px);
+    }
+
+    .card-item h4 { margin-bottom: 4px; color: #0f172a; font-size: 14px; }
+    .card-item p { color: #64748b; font-size: 12px; }
+
+    /* 3. PAINEL CENTRAL + INFERIOR */
+    .area-central {
+      display: grid;
+      grid-template-rows: 1fr 110px;
+      gap: 1px;
+      background-color: #cbd5e1;
+      position: relative;
+    }
+
+    .painel-principal {
+      background-color: #ffffff;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    /* ANIMAÇÃO FLUIDA DE TRANSIÇÃO DO PAINEL */
+    .conteudo-animado {
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       opacity: 1;
       transform: translateY(0);
+      width: 100%;
     }
 
-    .painel-conteudo.escondido {
+    .conteudo-animado.trocando {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(12px);
     }
 
-    /* BOTÕES */
-    .btn-icon {
-      width: 40px; height: 40px; border-radius: 50%; background: #f1f5f9;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: 0.2s;
+    .bloco-avisos {
+      background-color: #ffffff;
+      padding: 16px;
     }
-    .btn-icon:hover { background: #0284c7; color: white; }
 
-    .card {
-      padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;
-      cursor: pointer; transition: 0.2s;
+    /* 4. DIREITA (CALENDÁRIO + EVENTOS) */
+    .area-direita {
+      display: grid;
+      grid-template-rows: 320px 1fr;
+      gap: 1px;
+      background-color: #cbd5e1;
     }
-    .card:hover { border-color: #0284c7; background: #f0f9ff; }
+
+    .card-eventos {
+      background-color: #ffffff;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-eventos:hover {
+      background-color: #fffdf5;
+    }
+
+    /* MODAL OVERLAY (TELA CHEIA TOTAL) */
+    .overlay-expandido {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay-expandido.visivel {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-corpo {
+      background: #ffffff;
+      width: 90%;
+      max-width: 700px;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .overlay-expandido.visivel .modal-corpo {
+      transform: scale(1);
+    }
   </style>
 </head>
 <body>
 
-<div class="grid-container">
-  <!-- MENU LATERAL -->
-  <div class="col" style="align-items: center; background: #f8fafc;">
-    <div class="btn-icon" onclick="carregar('Módulo 1', 'Conteúdo animado do Módulo 1')">🏠</div>
-    <div class="btn-icon" onclick="carregar('Aulas', 'Lista completa de gravações')">📚</div>
-    <div class="btn-icon" onclick="carregar('Configurações', 'Planos de ensino')">⚙️</div>
+  <div class="dashboard-container">
+    
+    <!-- 1. BARRA LATERAL (ÍCONES) -->
+    <div class="coluna barra-icones">
+      <div class="btn-icon ativo" onclick="trocarAba('home', this)" title="Início">🏠</div>
+      <div class="btn-icon" onclick="trocarAba('aulas', this)" title="Aulas">📚</div>
+      <div class="btn-icon" onclick="trocarAba('avisos', this)" title="Avisos">📢</div>
+      <div class="btn-icon" onclick="trocarAba('config', this)" title="Configurações">⚙️</div>
+    </div>
+
+    <!-- 2. CARDS DA ESQUERDA -->
+    <div class="coluna lista-cards" id="coluna-cards">
+      <div class="card-item" onclick="exibirConteudo('Módulo 1', 'Acesse o material de introdução e as primeiras atividades.')">
+        <h4>📘 Módulo 1</h4>
+        <p>Clique para expandir</p>
+      </div>
+      <div class="card-item" onclick="exibirConteudo('Tarefas', 'Confira as entregas e prazos do semestre.')">
+        <h4>✏️ Tarefas</h4>
+        <p>Clique para ver os prazos</p>
+      </div>
+      <div class="card-item" style="flex-grow: 1;" onclick="exibirConteudo('Projeto Final', 'Instruções gerais sobre o trabalho em grupo.')">
+        <h4>🚀 Projeto Final</h4>
+        <p>Detalhes e equipe</p>
+      </div>
+    </div>
+
+    <!-- 3. PAINEL CENTRAL + INFERIOR -->
+    <div class="area-central">
+      <div class="painel-principal">
+        <div id="conteudo-painel" class="conteudo-animado">
+          <h2 style="color: #0f172a; margin-bottom: 8px;">Painel Interativo</h2>
+          <p style="color: #64748b; font-size: 14px;">Clique em qualquer bloco ou item lateral para visualizar o conteúdo detalhado aqui com animação fluida.</p>
+        </div>
+      </div>
+
+      <div class="bloco-avisos">
+        <h4 style="color: #334155; font-size: 13px; margin-bottom: 4px;">📢 Avisos da Coordenação</h4>
+        <p style="color: #64748b; font-size: 12px;">Fiquem atentos às datas dos encontros síncronos da semana!</p>
+      </div>
+    </div>
+
+    <!-- 4. DIREITA (CALENDÁRIO + EVENTOS) -->
+    <div class="area-direita">
+      <div class="coluna" style="padding: 10px;">
+        <iframe src="https://calendar.google.com/calendar/embed?src=renevieiragenrokol%40gmail.com&ctz=America%2FSao_Paulo" 
+                style="border:0; width:100%; height:100%; border-radius:6px;" frameborder="0" scrolling="no">
+        </iframe>
+      </div>
+
+      <div class="card-eventos" onclick="abrirModal()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+          <h4 style="color: #d97706; font-size: 13px;">🔔 Próximos Eventos</h4>
+          <span style="font-size: 10px; background: #fef3c7; color: #b45309; padding: 2px 6px; border-radius: 4px; font-weight: bold;">Ver Tudo 🔍</span>
+        </div>
+        <ul style="padding-left: 16px; font-size: 12px; color: #475569; line-height: 1.6;">
+          <li><strong>28/07:</strong> Entrega do Módulo 1</li>
+          <li><strong>05/08:</strong> Aula Síncrona via RNP</li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 
-  <!-- LISTA -->
-  <div class="col">
-    <div class="card" onclick="carregar('Aula 1', 'Introdução às metodologias')">📘 Aula 1</div>
-    <div class="card" onclick="carregar('Aula 2', 'Desenvolvimento do Projeto')">📂 Aula 2</div>
-  </div>
-
-  <!-- CONTEÚDO CENTRAL -->
-  <div class="col" style="background: #ffffff; justify-content: center; align-items: center; text-align: center;">
-    <div id="painel" class="painel-conteudo">
-      <h2 id="titulo">Bem-vindo</h2>
-      <p id="texto">Selecione uma opção para visualizar.</p>
+  <!-- OVERLAY / MODAL DE TELA CHEIA PARA EVENTOS -->
+  <div id="overlay" class="overlay-expandido">
+    <div class="modal-corpo">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 16px;">
+        <h3 style="color: #b45309; margin: 0;">📅 Cronograma & Eventos Expandido</h3>
+        <button onclick="fecharModal()" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">Fechar ✖</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; text-align: left;">
+        <div style="background: #fffdf5; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 4px;">
+          <strong>28/07 — Entrega do Módulo 1</strong>
+          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Envio do relatório em formato PDF até às 23:55 no Moodle.</p>
+        </div>
+        <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 12px; border-radius: 4px;">
+          <strong>05/08 — Aula Síncrona via RNP</strong>
+          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Encontro ao vivo interativo das 14:00 às 16:00.</p>
+        </div>
+        <div style="background: #f8fafc; border-left: 4px solid #64748b; padding: 12px; border-radius: 4px;">
+          <strong>18/08 — Apresentação do Projeto Integrador</strong>
+          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">Apresentação ao vivo para a banca examinadora.</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- CALENDÁRIO EXTERNO -->
-  <div class="col">
-    <iframe src="https://calendar.google.com/calendar/embed?src=renevieiragenrokol%40gmail.com&ctz=America%2FSao_Paulo" 
-            style="width: 100%; height: 100%; border:0;"></iframe>
-  </div>
-</div>
+  <script>
+    // TROCA DE CONTEÚDO COM ANIMAÇÃO SUAVE SLIDE-FADE
+    function exibirConteudo(titulo, texto) {
+      const el = document.getElementById('conteudo-painel');
+      el.classList.add('trocando');
+      
+      setTimeout(() => {
+        el.innerHTML = `
+          <h2 style="color: #0f172a; margin-bottom: 8px;">${titulo}</h2>
+          <p style="color: #334155; font-size: 14px; line-height: 1.6;">${texto}</p>
+        `;
+        el.classList.remove('trocando');
+      }, 200);
+    }
 
-<script>
-  function carregar(titulo, texto) {
-    const painel = document.getElementById('painel');
-    
-    // Animação de saída
-    painel.classList.add('escondido');
-    
-    setTimeout(() => {
-      document.getElementById('titulo').innerText = titulo;
-      document.getElementById('texto').innerText = texto;
-      // Animação de entrada
-      painel.classList.remove('escondido');
-    }, 300);
-  }
-</script>
+    // MODAL EM TELA CHEIA
+    function abrirModal() {
+      document.getElementById('overlay').classList.add('visivel');
+    }
 
+    function fecharModal() {
+      document.getElementById('overlay').classList.remove('visivel');
+    }
+
+    // TROCA DE ABAS LATERAIS
+    function trocarAba(aba, elemento) {
+      document.querySelectorAll('.btn-icon').forEach(btn => btn.classList.remove('ativo'));
+      elemento.classList.add('ativo');
+
+      const col = document.getElementById('coluna-cards');
+      
+      if(aba === 'home') {
+        col.innerHTML = `
+          <div class="card-item" onclick="exibirConteudo('Módulo 1', 'Acesse o material de introdução e as primeiras atividades.')">
+            <h4>📘 Módulo 1</h4><p>Clique para expandir</p>
+          </div>
+          <div class="card-item" onclick="exibirConteudo('Tarefas', 'Confira as entregas e prazos do semestre.')">
+            <h4>✏️ Tarefas</h4><p>Clique para ver os prazos</p>
+          </div>
+          <div class="card-item" style="flex-grow: 1;" onclick="exibirConteudo('Projeto Final', 'Instruções gerais sobre o trabalho em grupo.')">
+            <h4>🚀 Projeto Final</h4><p>Detalhes e equipe</p>
+          </div>
+        `;
+      } else if(aba === 'aulas') {
+        col.innerHTML = `
+          <div class="card-item" onclick="exibirConteudo('Aula 01 - Introdução', 'Assista ao vídeo gravado do primeiro encontro.')">
+            <h4>🎥 Aula 01</h4><p>Vídeo aula</p>
+          </div>
+          <div class="card-item" onclick="exibirConteudo('Aula 02 - Prática', 'Acesse os slides e códigos de exemplo.')">
+            <h4>📂 Aula 02</h4><p>Slides & Materiais</p>
+          </div>
+        `;
+      } else if(aba === 'avisos') {
+        col.innerHTML = `
+          <div class="card-item" onclick="exibirConteudo('Mural de Avisos', 'Lembrete: Mantenha suas tarefas em dia.')">
+            <h4>📢 Mural</h4><p>Recados da semana</p>
+          </div>
+        `;
+      } else if(aba === 'config') {
+        col.innerHTML = `
+          <div class="card-item" onclick="exibirConteudo('Plano de Ensino', 'Carga horária: 60h. Ementa disponível em PDF.')">
+            <h4>ℹ️ Sobre</h4><p>Plano do curso</p>
+          </div>
+        `;
+      }
+    }
+  </script>
 </body>
 </html>
